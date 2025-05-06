@@ -10,15 +10,9 @@ namespace Web_API_Test.Controllers
 {
     [Route("api/stock")]
     [ApiController]
-    public class StockController : ControllerBase
+    public class StockController(IStockRepository stockRepository) : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
-        private readonly IStockRepository _stockRepository;
-        public StockController(ApplicationDBContext context, IStockRepository stockRepository)
-        {
-            _context = context;
-            _stockRepository = stockRepository;
-        }
+        private readonly IStockRepository _stockRepository = stockRepository;
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -30,7 +24,7 @@ namespace Web_API_Test.Controllers
             return Ok(stockDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var stock = await _stockRepository.GetByIdAsync(id);
@@ -44,6 +38,12 @@ namespace Web_API_Test.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateStockRequestDto stockDto)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var stockModel = stockDto.ToStockFromCreateDto();
 
             if (stockModel == null)
@@ -55,9 +55,14 @@ namespace Web_API_Test.Controllers
             return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDto());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var stockModel = await _stockRepository.UpdateAsync(id, updateDto);
             if (stockModel == null)
             {
@@ -67,14 +72,14 @@ namespace Web_API_Test.Controllers
             return Ok(stockModel.ToStockDto());
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var stockModel = await _stockRepository.DeleteAsync(id);
             
             if (stockModel == null)
             {
-                return NotFound();
+                return NotFound("Stock does not exist");
             }
             
             return NoContent();

@@ -16,12 +16,12 @@ namespace Web_API_Test.Repositories
 
         public async Task<List<Stock>> GetAllAsync()
         {
-            return await _context.Stocks.ToListAsync();
+            return await _context.Stocks.Include(c => c.Comments).ToListAsync();
         }
 
         public async Task<Stock?> GetByIdAsync(int id)
         {
-            return await _context.Stocks.FindAsync(id);
+            return await _context.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<Stock> CreateAsync(Stock stock)
@@ -35,7 +35,7 @@ namespace Web_API_Test.Repositories
         {
             var stock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
-            if(stock == null)
+            if (stock == null)
             {
                 return null;
             }
@@ -49,7 +49,7 @@ namespace Web_API_Test.Repositories
         {
             var existingStock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
-            if(existingStock == null)
+            if (existingStock == null)
             {
                 return null;
             }
@@ -63,6 +63,11 @@ namespace Web_API_Test.Repositories
 
             await _context.SaveChangesAsync();
             return existingStock;
+        }
+
+        public async Task<bool> StockExists(int id)
+        {
+            return await _context.Stocks.AnyAsync(x => x.Id == id);
         }
     }
 }

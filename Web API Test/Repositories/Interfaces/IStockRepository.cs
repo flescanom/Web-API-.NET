@@ -10,5 +10,7 @@ namespace Web_API_Test.Repositories.Interfaces
         Task<Stock> CreateAsync(Stock stock);
         Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto stock);
         Task<Stock?> DeleteAsync(int id);
+        Task<bool> StockExists(int id);
+
     }
 }

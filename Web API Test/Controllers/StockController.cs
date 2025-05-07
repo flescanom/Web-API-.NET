@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Web_API_Test.Data;
 using Web_API_Test.Dtos.Stock;
+using Web_API_Test.Helpers;
 using Web_API_Test.Mappers;
 using Web_API_Test.Models;
 using Web_API_Test.Repositories.Interfaces;
@@ -15,9 +16,9 @@ namespace Web_API_Test.Controllers
         private readonly IStockRepository _stockRepository = stockRepository;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
-            var stocks = await _stockRepository.GetAllAsync();
+            var stocks = await _stockRepository.GetAllAsync(query);
 
             var stockDto = stocks.Select(s => s.ToStockDto());
 

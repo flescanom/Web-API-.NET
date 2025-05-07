@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Web_API_Test.Data;
 
@@ -11,9 +12,11 @@ using Web_API_Test.Data;
 namespace Web_API_Test.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250507123614_seedRole")]
+    partial class seedRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace Web_API_Test.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "932db3fb-5e0a-4456-af3d-76e27bd6cf52",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "0d33b108-699d-43a5-9520-e72282b1277e",
                             Name = "User",
                             NormalizedName = "USER"
                         });

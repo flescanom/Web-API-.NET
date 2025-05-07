@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Web_API_Test.Data;
 using Web_API_Test.Dtos.Stock;
@@ -15,6 +16,7 @@ namespace Web_API_Test.Controllers
     {
         private readonly IStockRepository _stockRepository = stockRepository;
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {

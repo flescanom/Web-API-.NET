@@ -1,16 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Web_API_Test.Dtos.Comment;
+using Web_API_Test.Extensions;
 using Web_API_Test.Mappers;
+using Web_API_Test.Models;
 using Web_API_Test.Repositories.Interfaces;
 
 namespace Web_API_Test.Controllers
 {
     [Route("api/comment")]
     [ApiController]
-    public class CommentController(ICommentRepository commentRepository, IStockRepository stockRepository) : ControllerBase
+    public class CommentController(ICommentRepository commentRepository, IStockRepository stockRepository, UserManager<AppUser> userManager) : ControllerBase
     {
         private readonly ICommentRepository _commentRepository = commentRepository;
         private readonly IStockRepository _stockRepository = stockRepository;
+        private readonly UserManager<AppUser> _userManager = userManager;
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -50,7 +54,13 @@ namespace Web_API_Test.Controllers
                 return BadRequest($"Stock with ID {stockId} not found.");
             }
 
+            var userName = User.GetUsername();
+            var appUser = await _userManager.FindByNameAsync(userName);
+
+
             var comment = commentDto.ToCommentFromCreate(stockId);
+            comment.AppUserId = appUser.Id;
+
             await _commentRepository.CreateAsync(comment);
             return CreatedAtAction(nameof(GetById), new { id = comment.Id }, comment.ToCommentDto());
         }

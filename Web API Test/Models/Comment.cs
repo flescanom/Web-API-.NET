@@ -1,5 +1,8 @@
-﻿namespace Web_API_Test.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Web_API_Test.Models
 {
+    [Table("Comments")]
     public class Comment
     {
         public int Id { get; set; }

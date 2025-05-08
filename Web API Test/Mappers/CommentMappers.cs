@@ -13,6 +13,7 @@ namespace Web_API_Test.Mappers
                 Title = comment.Title,
                 Content = comment.Content,
                 CreatedOn = comment.CreatedOn,
+                CreateBy = comment.AppUser?.UserName ?? string.Empty,
                 StockId = comment.StockId
             };
         }
